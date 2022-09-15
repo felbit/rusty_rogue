@@ -13,6 +13,11 @@ The hero's hometown is suffering from a plague of monsters. Welling up from the 
 4. Find power-ups and use them to strengthen the player character
 5. Locate the level exit - go to 1.
 
+## Enemies
+
+### Goblin
+Angry, but cowardly, small green humanoids that attack in groups of at least two, but run away when alone. They prefer throwing stones from afar and tend to run away when you come too close; attention: Will try to overwhelm you in melee combat when in hordes of more then 5.
+
 ## MVP
 - [ ] Create a basic dungeon map
 - [ ] Place the player and let them walk around
