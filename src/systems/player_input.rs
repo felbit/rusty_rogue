@@ -24,7 +24,7 @@ pub fn player_input(
             players.iter_mut(ecs).for_each(|pos| {
                 let new_pos = *pos + delta;
                 if map.can_enter_tile(new_pos) {
-                    self.pos = new_pos;
+                    *pos = new_pos;
                     camera.on_player_move(new_pos);
                 }
             });
