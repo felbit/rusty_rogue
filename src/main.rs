@@ -40,6 +40,11 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut ecs, map_builder.player_start);
+        map_builder.rooms                                               // get all the rooms
+            .iter()                                                     // iterate over them
+            .skip(1)                                                    // skip the player start (first room)
+            .map(|r| r.center())                                        // get the center Point for each room
+            .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));    // position a monster there
 
         resources.inset(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
