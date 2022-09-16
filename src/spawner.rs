@@ -1,6 +1,3 @@
-// spawner.rs
-// Module to handle spawning entities.
-
 use crate::prelude::*;
 
 pub fn spawn_player(ecs: &mut World, pos: Point) {
@@ -33,7 +30,8 @@ pub fn spawn_monster(
                     2 => to_cp437('o'), // Orc
                     _ => to_cp437('g')  // Goblin
                 }
-            }
+            },
+            MoveRandomly{},
         )
     );
 }
