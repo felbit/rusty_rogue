@@ -19,20 +19,40 @@ pub fn spawn_monster(
     rng: &mut RandomNumberGenerator,
     pos: Point,
 ) {
+    let (hp, name, glyph) = match rng.roll_dice(1, 20) {
+        1..=14 => goblin(),
+        15..=17 => orc(),
+        18..=19 => ogre(),
+        _ => ettin(),
+    };
+
     ecs.push(
         (
             Enemy,
             pos,
             Render {
                 color: ColorPair::new(WHITE, BLACK),
-                glyph: match rng.range(0, 4) {
-                    0 => to_cp437('E'), // Ettin
-                    1 => to_cp437('O'), // Ogre
-                    2 => to_cp437('o'), // Orc
-                    _ => to_cp437('g')  // Goblin
-                }
+                glyph,
             },
             MoveRandomly{},
+            Health { current: hp, max: hp },
+            Name(name),
         )
     );
+}
+
+pub fn ettin() -> (i32, String, FontCharType) {
+    (4, "Ettin".to_string(), to_cp437('E'))
+}
+
+pub fn ogre() -> (i32, String, FontCharType) {
+    (3, "Ogre".to_string(), to_cp437('O'))
+}
+
+pub fn orc() -> (i32, String, FontCharType) {
+    (2, "Orc".to_string(), to_cp437('o'))    
+}
+
+pub fn goblin() -> (i32, String, FontCharType) {
+    (1, "Goblin".to_string(), to_cp437('g'))
 }
