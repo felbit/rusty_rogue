@@ -26,7 +26,7 @@ pub struct Render {
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WantsToAttack {
-    pub entity: Entity,
+    pub attacker: Entity,
     pub victim: Entity,
 }
 
