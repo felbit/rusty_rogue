@@ -26,8 +26,5 @@ pub fn collision(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
                     * query as a reference and will be referenced again by the 
                     * iterator.
                     */
-        .for_each(|(entity, _| {
-            commands.remove(*entity);
-        }
-    );
+        .for_each(|(entity, _)| commands.remove(*entity));
 }

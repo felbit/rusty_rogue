@@ -21,7 +21,7 @@ Angry, but cowardly, small green humanoids that attack in groups of at least two
 ## MVP
 - [x] Create a basic dungeon map
 - [x] Place the player and let them walk around
-- [ ] Spawn monsters, draw them, and let the player kill them by walking into them
+- [x] Spawn monsters, draw them, and let the player kill them by walking into them
 - [ ] Add health and combat system
 - [ ] Add health potions
 - [ ] Display a "game over" screen when the player dies
