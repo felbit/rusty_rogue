@@ -21,11 +21,35 @@ pub fn player_input(
             _ => Point::new(0, 0),
         };
 
-        players.iter(ecs).for_each(|(entity, pos)| {
-            let destination = *pos + delta;
-            commands.
-                .push(((), WantsToMove { entity: *entity, destination}));
-        });
+        let (player_entity, destination) = players.iter(ecs)
+            // map over the query results and return the first result
+            .find_map(|(entity, pos)| Some((*entity, *pos+delta)))
+            // we know that we have exactly one player entity, 
+            // therefore we can unwrap safely (or crash)
+            .unwrap();
+        
+        // is there an enemy?
+        let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
+        if delta.x != 0 || delta.y != 0 {
+            let mut hit_some = false;
+            enemies.iter(ecs)
+                .filter(|(_, pos)| **pos == destination)
+                .for_each(|(entity, _)| {
+                    hit_some = true;
+                    commands.push(((), WantsToAttack {
+                        attacker: player_entity,
+                        victim: *entity,
+                    }));
+                });
+
+                if !hit_some {
+                    commands.push(((), WantsToMove {
+                        entity: player_entity,
+                        destination,
+                    }));
+                }
+        }
+
         *turn_state = TurnState::PlayerTurn;
     }
 
