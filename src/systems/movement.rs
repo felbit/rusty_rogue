@@ -13,7 +13,7 @@ pub fn movement(
     #[resource] map: &Map,
     #[resource] camera: &mut Camera,
     ecs: &mut SubWorld,
-    command: &mut CommandBuffer,
+    commands: &mut CommandBuffer,
 ) {
     if map.can_enter_tile(want_move.destination) {
         /* It's more efficient to use commands, because Legion will batch the
