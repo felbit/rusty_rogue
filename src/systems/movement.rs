@@ -19,7 +19,7 @@ pub fn movement(
         /* It's more efficient to use commands, because Legion will batch the
          * updates and run them all at once (faster & more efficient) 
          */
-        commands.add_component(want_move.entity), want_move.destination);
+        commands.add_component(want_move.entity, want_move.destination);
 
         if ecs.entry_ref(want_move.entity)
             .unwrap()

@@ -23,8 +23,7 @@ pub fn player_input(
 
         players.iter(ecs).for_each(|(entity, pos)| {
             let destination = *pos + delta;
-            commands.
-                .push(((), WantsToMove { entity: *entity, destination}));
+            commands.push(((), WantsToMove { entity: *entity, destination } ));
         });
         *turn_state = TurnState::PlayerTurn;
     }

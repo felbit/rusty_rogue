@@ -1,4 +1,4 @@
-pub use crate::prelude:*;
+pub use crate::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Render {
