@@ -10,7 +10,7 @@ pub fn combat(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
         .collect::<Vec<(Entity, Entity)>>();
     
     victims.iter().for_each(|(message, victim)| {
-        if let OK(mut health) = ecs.entry_mut(*victim).unwrap()
+        if let Ok(mut health) = ecs.entry_mut(*victim).unwrap()
             .get_component_mut::<Health>()
         {
             health.current -= 1;
