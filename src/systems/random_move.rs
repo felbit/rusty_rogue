@@ -6,7 +6,7 @@ use crate::prelude::*;
 pub fn random_move(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
     let mut movers = <(Entity, &mut Point, &MoveRandomly)>::query();
     movers
-        .iter(ecs)
+        .iter_mut(ecs)
         .for_each(|(entity, pos, _)| {
             let mut rng = RandomNumberGenerator::new();
             let destination = match rng.range(0, 4) {

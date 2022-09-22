@@ -13,7 +13,7 @@ pub fn entity_render(
 
     <(&Point, &Render)>::query()
         .iter(ecs)
-        .for_each(|pos, render| {
+        .for_each(|(pos, render)| {
             draw_batch.set(
                 *pos - offset,
                 render.color,

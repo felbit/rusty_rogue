@@ -50,7 +50,7 @@ impl State {
             .map(|r| r.center())                                        // get the center Point for each room
             .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));    // position a monster there
 
-        resources.inset(map_builder.map);
+        resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TurnState::AwaitInput);
 
