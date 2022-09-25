@@ -1,5 +1,6 @@
 use crate::prelude::*;
 
+mod chasing;
 mod collision;
 mod combat;
 mod end_turn;
