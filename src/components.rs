@@ -1,7 +1,24 @@
 pub use crate::prelude::*;
 
+/*
+ * Begin: Tag Components
+ */
+
+#[Clone, Copy, Debug, PartialEq]
+pub struct ChasingPlayer;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Enemy;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MoveRandomly;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Player;
+
+/*
+ * End: Tag Components
+ */
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Health {
@@ -9,14 +26,8 @@ pub struct Health {
     pub max: i32,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct MoveRandomly;
-
 #[derive(Clone, PartialEq)]
 pub struct Name(pub String);
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Player;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Render {
