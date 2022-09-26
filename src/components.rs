@@ -4,7 +4,7 @@ pub use crate::prelude::*;
  * Begin: Tag Components
  */
 
-#[Clone, Copy, Debug, PartialEq]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ChasingPlayer;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
