@@ -94,7 +94,7 @@ impl Algorithm2D for Map {
 }
 
 impl BaseMap for Map {
-    fn get_available_exists(&self, idx: usize) 
+    fn get_available_exits(&self, idx: usize) 
         -> SmallVec<[(usize, f32); 10]> 
     {
         let mut exists = SmallVec::new();
