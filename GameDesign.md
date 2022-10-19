@@ -22,13 +22,13 @@ Angry, but cowardly, small green humanoids that attack in groups of at least two
 - [x] Create a basic dungeon map
 - [x] Place the player and let them walk around
 - [x] Spawn monsters, draw them, and let the player kill them by walking into them
-- [ ] Add health and combat system
+- [x] Add health and combat system
 - [ ] Add health potions
-- [ ] Display a "game over" screen when the player dies
-- [ ] Add the Amulet of Yala to the level and let the player win by reaching it
+- [x] Display a "game over" screen when the player dies
+- [x] Add the Amulet of Yala to the level and let the player win by reaching it
 
 ## Stretch Goals
-- [ ] Add Fields-of-View
+- [x] Add Fields-of-View
 - [ ] Add more interesting dungeon designs
 - [ ] Add dungeon themes
 - [ ] Add multiple layers to the dungeon (multiple levels), with the Amulet on the last one
