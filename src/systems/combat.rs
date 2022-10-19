@@ -6,15 +6,21 @@ use crate::prelude::*;
 #[write_component(Health)]
 pub fn combat(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
     let mut attackers = <(Entity, &WantsToAttack)>::query();
-    let victims = attackers.iter(ecs)
+    let victims = attackers
+        .iter(ecs)
         .map(|(entity, attack)| (*entity, attack.victim))
         .collect::<Vec<(Entity, Entity)>>();
-    
+
     victims.iter().for_each(|(message, victim)| {
-        let is_player = ecs.entry_ref(*victim).unwrap()
-            .get_component::<Player>().is_ok();
-        
-        if let Ok(mut health) = ecs.entry_mut(*victim).unwrap()
+        let is_player = ecs
+            .entry_ref(*victim)
+            .unwrap()
+            .get_component::<Player>()
+            .is_ok();
+
+        if let Ok(mut health) = ecs
+            .entry_mut(*victim)
+            .unwrap()
             .get_component_mut::<Health>()
         {
             health.current -= 1;

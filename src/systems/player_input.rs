@@ -11,8 +11,7 @@ pub fn player_input(
     #[resource] key: &Option<VirtualKeyCode>,
     #[resource] turn_state: &mut TurnState,
 ) {
-    let mut players = <(Entity, &Point)>::query()
-        .filter(component::<Player>());
+    let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
 
     if let Some(key) = *key {
         let delta = match key {
@@ -23,49 +22,58 @@ pub fn player_input(
             _ => Point::new(0, 0),
         };
 
-        let (player_entity, destination) = players.iter(ecs)
+        let (player_entity, destination) = players
+            .iter(ecs)
             // map over the query results and return the first result
-            .find_map(|(entity, pos)| Some((*entity, *pos+delta)))
-            // we know that we have exactly one player entity, 
+            .find_map(|(entity, pos)| Some((*entity, *pos + delta)))
+            // we know that we have exactly one player entity,
             // therefore we can unwrap safely (or crash)
             .unwrap();
-        
+
         // is there an enemy?
         let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
         let mut did_some = false;
 
         if delta.x != 0 || delta.y != 0 {
             let mut hit_some = false;
-            enemies.iter(ecs)
+            enemies
+                .iter(ecs)
                 .filter(|(_, pos)| **pos == destination)
                 .for_each(|(entity, _)| {
                     hit_some = true;
                     did_some = true; // obviously, just hit something
 
-                    commands.push(((), WantsToAttack {
-                        attacker: player_entity,
-                        victim: *entity,
-                    }));
+                    commands.push((
+                        (),
+                        WantsToAttack {
+                            attacker: player_entity,
+                            victim: *entity,
+                        },
+                    ));
                 });
 
-                if !hit_some {
-                    did_some = true; // still moved
-                    commands.push(((), WantsToMove {
+            if !hit_some {
+                did_some = true; // still moved
+                commands.push((
+                    (),
+                    WantsToMove {
                         entity: player_entity,
                         destination,
-                    }));
-                }
+                    },
+                ));
+            }
         }
 
         if !did_some {
-            if let Ok(mut health) = ecs.entry_mut(player_entity).unwrap()
+            if let Ok(mut health) = ecs
+                .entry_mut(player_entity)
+                .unwrap()
                 .get_component_mut::<Health>()
             {
-                health.current = i32::min(health.max, health.current+1);
+                health.current = i32::min(health.max, health.current + 1);
             }
         }
-        
+
         *turn_state = TurnState::PlayerTurn;
     }
-
 }

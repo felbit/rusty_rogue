@@ -18,13 +18,14 @@ pub fn collision(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
 
     // get all enemy positions
     let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
-    
+
     // Check if the player has moved atop an enemy and remove the enemy if so
-    enemies.iter(ecs)
-        .filter(|(_, pos)| **pos == player_pos) 
-                   /* here ^ pos has the type &&Point, because it enters the 
-                    * query as a reference and will be referenced again by the 
-                    * iterator.
-                    */
+    enemies
+        .iter(ecs)
+        .filter(|(_, pos)| **pos == player_pos)
+        /* here ^ pos has the type &&Point, because it enters the
+         * query as a reference and will be referenced again by the
+         * iterator.
+         */
         .for_each(|(entity, _)| commands.remove(*entity));
 }

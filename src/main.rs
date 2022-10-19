@@ -8,10 +8,10 @@ mod turn_state;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
-    pub use legion::*;
-    pub use legion::world::SubWorld;
     pub use legion::systems::CommandBuffer;
-    
+    pub use legion::world::SubWorld;
+    pub use legion::*;
+
     pub const SCREEN_WIDTH: i32 = 80;
     pub const SCREEN_HEIGHT: i32 = 50;
     pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
@@ -46,17 +46,19 @@ impl State {
         let map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut ecs, map_builder.player_start);
-        map_builder.rooms                                               // get all the rooms
-            .iter()                                                     // iterate over them
-            .skip(1)                                                    // skip the player start (first room)
-            .map(|r| r.center())                                        // get the center Point for each room
-            .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos));    // position a monster there
+        spawn_amulet_of_yala(&mut ecs, map_builder.amulet_start);
+        map_builder
+            .rooms // get all the rooms
+            .iter() // iterate over them
+            .skip(1) // skip the player start (first room)
+            .map(|r| r.center()) // get the center Point for each room
+            .for_each(|pos| spawn_monster(&mut ecs, &mut rng, pos)); // position a monster there
 
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TurnState::AwaitInput);
 
-        Self { 
+        Self {
             ecs,
             resources,
             input_systems: build_input_scheduler(),
@@ -68,8 +70,18 @@ impl State {
     fn game_over(&mut self, ctx: &mut BTerm) {
         ctx.set_active_console(2);
         ctx.print_color_centered(2, RED, BLACK, "Your quest has ended.");
-        ctx.print_color_centered(4, WHITE, BLACK, "Slain by a monster your hero's journey has come to a premature end.");
-        ctx.print_color_centered(5, WHITE, BLACK, "The amulet of Yala remains unclaimed, and your home town is not saved...");
+        ctx.print_color_centered(
+            4,
+            WHITE,
+            BLACK,
+            "Slain by a monster your hero's journey has come to a premature end.",
+        );
+        ctx.print_color_centered(
+            5,
+            WHITE,
+            BLACK,
+            "The amulet of Yala remains unclaimed, and your home town is not saved...",
+        );
         ctx.print_color_centered(8, YELLOW, BLACK, "... yet!");
         ctx.print_color_centered(9, GREEN, BLACK, "Press 1 to try again!");
 
@@ -79,7 +91,10 @@ impl State {
             let mut rng = RandomNumberGenerator::new();
             let map_builder = MapBuilder::new(&mut rng);
             spawn_player(&mut self.ecs, map_builder.player_start);
-            map_builder.rooms.iter()
+            spawn_amulet_of_yala(&mut self.ecs, map_builder.amulet_start);
+            map_builder
+                .rooms
+                .iter()
                 .skip(1)
                 .map(|r| r.center())
                 .for_each(|pos| spawn_monster(&mut self.ecs, &mut rng, pos));
@@ -96,35 +111,36 @@ impl GameState for State {
 
         ctx.set_active_console(0);
         ctx.cls();
-        
+
         self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
-        
+
         ctx.set_active_console(1);
         ctx.cls();
         ctx.set_active_console(2);
         ctx.cls();
 
-
-        let current_state = self.resources.get::<TurnState>() // returns Option
-            .unwrap()       // unwrap the Option; we know it exists
-            .clone();       // unborrow the resource
+        let current_state = self
+            .resources
+            .get::<TurnState>() // returns Option
+            .unwrap() // unwrap the Option; we know it exists
+            .clone(); // unborrow the resource
         match current_state {
-            TurnState::AwaitInput => {
-                self.input_systems.execute(&mut self.ecs, &mut self.resources)
-            },
-            TurnState::PlayerTurn => {
-                self.player_systems.execute(&mut self.ecs, &mut self.resources)
-            },
-            TurnState::MonsterTurn => {
-                self.monster_systems.execute(&mut self.ecs, &mut self.resources)
-            },
+            TurnState::AwaitInput => self
+                .input_systems
+                .execute(&mut self.ecs, &mut self.resources),
+            TurnState::PlayerTurn => self
+                .player_systems
+                .execute(&mut self.ecs, &mut self.resources),
+            TurnState::MonsterTurn => self
+                .monster_systems
+                .execute(&mut self.ecs, &mut self.resources),
             TurnState::GameOver => {
                 self.game_over(ctx);
             }
         }
 
         render_draw_buffer(ctx).expect("Render error");
-        
+
         // TODO: Render Draw Buffer
     }
 }
@@ -140,7 +156,7 @@ fn main() -> BError {
         .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
         .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
-        .with_simple_console_no_bg(SCREEN_WIDTH*2, SCREEN_HEIGHT*2, "terminal8x8.png")
+        .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "terminal8x8.png")
         .build()?;
     main_loop(context, State::new())
 }
