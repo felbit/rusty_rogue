@@ -75,7 +75,7 @@ impl State {
         spawn_amulet_of_yala(&mut self.ecs, mb.amulet_start);
         mb.monster_spawns
             .iter()
-            .for_each(|(pos)| spawn_monster(&mut self.ecs, &mut rng, *pos));
+            .for_each(|pos| spawn_monster(&mut self.ecs, &mut rng, *pos));
 
         self.resources.insert(mb.map);
         self.resources.insert(Camera::new(mb.player_start));
