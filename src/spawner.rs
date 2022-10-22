@@ -17,10 +17,10 @@ pub fn spawn_player(ecs: &mut World, pos: Point) {
 }
 
 pub fn spawn_entity(ecs: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
-    let roll = rng.roll_dice(1, 6);
+    let roll = rng.roll_dice(1, 30);
     match roll {
-        1 => spawn_healing_potion(ecs, pos),
-        2 => spawn_magic_map(ecs, pos),
+        1 => spawn_magic_map(ecs, pos),
+        2..=7 => spawn_healing_potion(ecs, pos),
         _ => spawn_monster(ecs, rng, pos),
     }
 }
