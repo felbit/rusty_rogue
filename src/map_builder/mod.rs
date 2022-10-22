@@ -2,6 +2,7 @@ use self::automata::CellularAutomataArchitect;
 use self::drunkard::DrunkardsWalkArchitect;
 use self::prefab::apply_prefab;
 use self::rooms::RoomsArchitect;
+use self::themes::{DungeonTheme, ForestTheme};
 use crate::prelude::*;
 
 mod automata;
@@ -9,11 +10,20 @@ mod drunkard;
 mod empty;
 mod prefab;
 mod rooms;
+mod themes;
 
 const NUM_ROOMS: usize = 20;
 
 trait MapArchitect {
     fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+}
+
+// Sync - object can safely be accessed from multiple threads
+// Send - object can safely be shared between multiple threads
+// => implementing Sync+Send constrains MapThemes to only be implemented by
+//    types that implement Sync+Send themselves
+pub trait MapTheme: Sync + Send {
+    fn tile_to_render(&self, tile_type: TileType) -> FontCharType;
 }
 
 pub struct MapBuilder {
@@ -22,6 +32,7 @@ pub struct MapBuilder {
     pub monster_spawns: Vec<Point>,
     pub player_start: Point,
     pub amulet_start: Point,
+    pub theme: Box<dyn MapTheme>,
 }
 
 impl MapBuilder {
@@ -33,6 +44,12 @@ impl MapBuilder {
         };
         let mut mb = architect.new(rng);
         apply_prefab(&mut mb, rng);
+
+        mb.theme = match rng.range(0, 2) {
+            0 => DungeonTheme::new(),
+            _ => ForestTheme::new(),
+        };
+
         mb
     }
 

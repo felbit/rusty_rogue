@@ -1,6 +1,6 @@
 /* Default implementation for MapArchitect trait */
-use crate::prelude::*;
 use super::{MapArchitect, NUM_ROOMS};
+use crate::prelude::*;
 
 pub struct RoomsArchitect {}
 
@@ -12,6 +12,7 @@ impl MapArchitect for RoomsArchitect {
             monster_spawns: Vec::new(),
             player_start: Point::zero(),
             amulet_start: Point::zero(),
+            theme: super::themes::DungeonTheme::new(),
         };
 
         mb.fill(TileType::Floor);

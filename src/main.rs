@@ -55,6 +55,7 @@ impl State {
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_start));
         resources.insert(TurnState::AwaitInput);
+        resources.insert(map_builder.theme);
 
         Self {
             ecs,
@@ -80,6 +81,7 @@ impl State {
         self.resources.insert(mb.map);
         self.resources.insert(Camera::new(mb.player_start));
         self.resources.insert(TurnState::AwaitInput);
+        self.resources.insert(mb.theme);
     }
 
     fn game_over(&mut self, ctx: &mut BTerm) {
