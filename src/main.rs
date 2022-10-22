@@ -43,10 +43,12 @@ impl State {
         let mut ecs = World::default();
         let mut resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let map_builder = MapBuilder::new(&mut rng);
+        let mut map_builder = MapBuilder::new(&mut rng);
 
         spawn_player(&mut ecs, map_builder.player_start);
-        spawn_amulet_of_yala(&mut ecs, map_builder.amulet_start);
+        // spawn_amulet_of_yala(&mut ecs, map_builder.amulet_start);
+        let exit_idx = map_builder.map.point2d_to_index(map_builder.amulet_start);
+        map_builder.map.tiles[exit_idx] = TileType::Exit;
         map_builder
             .monster_spawns
             .iter()
@@ -70,10 +72,12 @@ impl State {
         self.ecs = World::default();
         self.resources = Resources::default();
         let mut rng = RandomNumberGenerator::new();
-        let mb = MapBuilder::new(&mut rng);
+        let mut mb = MapBuilder::new(&mut rng);
 
         spawn_player(&mut self.ecs, mb.player_start);
-        spawn_amulet_of_yala(&mut self.ecs, mb.amulet_start);
+        // spawn_amulet_of_yala(&mut self.ecs, mb.amulet_start);
+        let exit_idx = mb.map.point2d_to_index(mb.amulet_start);
+        mb.map.tiles[exit_idx] = TileType::Exit;
         mb.monster_spawns
             .iter()
             .for_each(|pos| spawn_entity(&mut self.ecs, &mut rng, *pos));
@@ -127,6 +131,27 @@ impl State {
             self.reset_game_state();
         }
     }
+
+    fn advance_level(&mut self) {
+        let player_entity = *<Entity>::query()
+            .filter(component::<Player>())
+            .iter(&mut self.ecs)
+            .nth(0)
+            .unwrap();
+
+        use std::collections::HashSet;
+        let mut entities_to_keep = HashSet::new();
+        entities_to_keep.insert(player_entity);
+
+        // Add inventory to the items to keep
+        <(Entity, &Carried)>::query()
+            .iter(&self.ecs)
+            .filter(|(_e, carry)| carry.0 == player_entity)
+            .map(|(e, _carry)| *e)
+            .for_each(|e| {
+                entities_to_keep.insert(e);
+            });
+    }
 }
 
 impl GameState for State {
@@ -158,6 +183,7 @@ impl GameState for State {
             TurnState::MonsterTurn => self
                 .monster_systems
                 .execute(&mut self.ecs, &mut self.resources),
+            TurnState::NextLevel => self.advance_level(),
             TurnState::GameOver => self.game_over(ctx),
             TurnState::Victory => self.victory(ctx),
         }
