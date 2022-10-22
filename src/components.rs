@@ -1,31 +1,23 @@
 pub use crate::prelude::*;
 use std::collections::HashSet;
 
-/*
- * Begin: Tag Components
- */
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ActivateItem {
+    pub used_by: Entity,
+    pub item: Entity,
+}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AmuletOfYala;
+
+#[derive(Clone, PartialEq)]
+pub struct Carried(pub Entity);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ChasingPlayer;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Enemy;
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Item;
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct MoveRandomly;
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Player;
-
-/*
- * End: Tag Components
- */
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FieldOfView {
@@ -40,8 +32,25 @@ pub struct Health {
     pub max: i32,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Item;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MoveRandomly;
+
 #[derive(Clone, PartialEq)]
 pub struct Name(pub String);
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Player;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ProvidesDungeonMap;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ProvidesHealing {
+    pub amount: i32,
+}
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Render {
@@ -62,6 +71,7 @@ pub struct WantsToMove {
 }
 
 /* *** Implementations *** */
+
 impl FieldOfView {
     pub fn new(radius: i32) -> Self {
         Self {
