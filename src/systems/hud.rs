@@ -12,7 +12,10 @@ pub fn hud(ecs: &SubWorld) {
 
     let mut draw_batch = DrawBatch::new();
     draw_batch.target(2);
-    draw_batch.print_centered(1, "Explore the Dungeon. Cursor keys to move.");
+    draw_batch.print_centered(
+        1,
+        "Explore the Dungeon. Cursor keys to move. [G] to pickup items. [1-9] to use items.",
+    );
     draw_batch.bar_horizontal(
         Point::zero(),
         SCREEN_WIDTH * 2,
@@ -24,6 +27,18 @@ pub fn hud(ecs: &SubWorld) {
         0,
         format!("Health: {} / {}", player_health.current, player_health.max),
         ColorPair::new(WHITE, RED),
+    );
+
+    /* Current Level */
+    let (_player, level) = <(Entity, &Player)>::query()
+        .iter(ecs)
+        .find_map(|(entity, player)| Some((*entity, player.game_level)))
+        .unwrap();
+
+    draw_batch.print_color_right(
+        Point::new(SCREEN_WIDTH * 2, 1),
+        format!("Level: {}", level + 1),
+        ColorPair::new(YELLOW, BLACK),
     );
 
     /* ***** Inventory ***** */
